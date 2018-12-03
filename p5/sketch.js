@@ -11,20 +11,21 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(512, 512);
+
+  createCanvas(1024, 512);
   textAlign(CENTER);
   textSize(18);
+
   if (load) {
     chars = {};
     parseDict(dlines);
     parseStrokes(plines);
   }
-  //console.log(chars['偉']);
 }
 
 var partIdx = 0;
 
-function draw() {
+function drawX() {
 
   background(245);
   if (millis() - ts > 1000 && !mouseIsPressed) {
@@ -36,20 +37,36 @@ function draw() {
   if (mouseX >= width/2) partIdx = 1;
   if (mouseX >= width) partIdx = -1;
 
-  renderPath(char, { part: partIdx });
-  text(char.definition, width / 2, height - 10);
-  //noloop();
+  renderCharacters([randomProp(chars), randomProp(chars)]);
+  //renderPath(char, { part: partIdx });
+  //text(char.definition, width / 2, height - 10);
+  noloop();
 }
 
-function renderPath(char, options) {
+function randomWord() {
+
+}
+
+function renderCharacters(chars) {
+  var s = "";
+  for (var i = 0; i < chars.length; i++)
+    s += chars[i].character;
+  console.log("renderCharacters: "+s);
+  for (var i = 0; i < chars.length; i++) {
+    renderPath(chars[i], i, -1);
+  }
+}
+
+function renderPath(char, charPos, options) {
 
   var pg = options && options.renderer || this._renderer;
   if (typeof pg === 'undefined') throw Error('No renderer');
   if (typeof char.matches === 'undefined') throw Error('No matches: '+char.character);
 
-  var pidx = -1;
+  var pidx = -1, pos = 0;
 
   if (options && typeof options.part != 'undefined') pidx = options.part;
+  if (typeof charPos != 'undefined' && charPos > 0) pos = charPos;
 
   //console.log(char.character, pidx);
 
@@ -71,6 +88,7 @@ function renderPath(char, options) {
   for (var i = 0; i < paths.length; i++) {
     if (adjust) {
       ctx.translate(0, 512-70); // shift for mirror
+      if (pos > 0) ctx.translate(512, 0); // shift for mirror
       ctx.scale(.5, -.5); // mirror-vertically
     }
 
