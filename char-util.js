@@ -11,10 +11,18 @@ function parseDict(lines) {
       //if (dcom[0] == '？') return;
 
       // single left/right pair
-      if (dcom.length==3 && dcom[0] == '⿰' && dcom[1] == '亻') {
-        //console.log(data.character+": '"+dcom[0]+"' "+ dcom[1] + dcom[2])
-        chars[data.character] = data;
-        count++;
+      if (dcom.length==3) {
+        if (dcom[0] == '⿰' && dcom[1] == '亻') {
+          //console.log(data.character);//+": '"+data)
+          chars[data.character] = data;
+          count++;
+        }
+        // single top/bottom pair
+        if (dcom[0] == '⿱' && dcom[1] == '') {
+          //console.log(data.character);//+": '"+data)
+          chars[data.character] = data;
+          count++;
+        }
       }
     }
   });
@@ -29,13 +37,20 @@ function randomChar(obj) {
 function parseStrokes(lines) {
 
   var count = 0;
+  //var missing = 0;
   lines.forEach(line => {
     if (line) {
       var data = JSON.parse(line);
       if (chars.hasOwnProperty(data.character)) {
+          if (chars[data.character].hasOwnProperty('strokes'))
+            console.error("Dup. stroke data for: "+data.character);
           chars[data.character].strokes = data.strokes;
           count++;
       }
+      // else {
+      //   missing++;
+      //   console.error(missing+") Strokes, but no char: "+data.character);
+      // }
     }
   });
   console.log("Processed "+count+" paths");
