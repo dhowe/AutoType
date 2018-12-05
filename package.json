@@ -1,0 +1,26 @@
+{
+  "name": "autotype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhowe/AutoType.git"
+  },
+  "author": "Daniel C Howe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dhowe/AutoType/issues"
+  },
+  "homepage": "https://github.com/dhowe/AutoType#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}

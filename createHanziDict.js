@@ -9,6 +9,7 @@ var json = JSON.stringify(chars, null, 2);
 fs.writeFileSync(OUTPUT, json);
 console.log("Wrote JSON to "+OUTPUT);
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
 function parseDict(lines) {
@@ -20,14 +21,18 @@ function parseDict(lines) {
       decomposition: data.decomposition
     };
   }
-  var count = 0;
+  var count = 0, uniques = {};
 
   lines.forEach(line => {
     if (line) {
       var data = JSON.parse(line);
       var dcom = data.decomposition;
-      // single left/right or top/bottom pair
+
+      // store unique top-level decomps
+      if (dcom[0] != '？') uniques[dcom[0]] = 1;
+
       if (dcom.length == 3) {
+        // single left/right or top/bottom pair
         if (dcom[0] === '⿰' || dcom[0] === '⿱') {
           //console.log(data.character);//+": '"+data)
           addData(chars, data);
@@ -36,7 +41,9 @@ function parseDict(lines) {
       }
     }
   });
+
   console.log("Processed "+count+" characters");
+  console.log("Found  "+Object.keys(uniques));
 }
 
 function parseStrokes(lines, saveAsJSON) {

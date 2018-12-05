@@ -1,3 +1,4 @@
 data/*
 **/*.min.js
 p5/p5.js
+node_modules
