@@ -1,7 +1,7 @@
 // http://localhost/git/AutoSave/p5/index.html
 
-var word, charData, wordData, memory = [],
-  memorySize = 10;
+var word, charData, wordData, memory = [];
+var memorySize = 10;
 
 function preload() {
 
@@ -48,61 +48,15 @@ function wordsMatchingDecompAtNonMatchingChar(word, partialMatches) {
   return matches;
 }
 
-function wordsMatchingDecompAt(word, idx, partialMatches) {
-  var matches = [];
-  for (var i = 0; i < partialMatches.length; i++) {
-    if (word.characters[idx].decomposition[0] === charData[partialMatches[i][idx]].decomposition[0]) {
-      matches.push(partialMatches[i]);
-    }
-  }
-  return matches;
-}
-
-
-function findNextX() {
-
-  var keep0 = wordsMatchingCharAt(word.literal, 1, wordData, charData);
-  var keep1 = wordsMatchingCharAt(word.literal, 0, wordData, charData);
-  var matches0 = wordsMatchingDecompAt(word, 1, keep0);
-  var matches1 = wordsMatchingDecompAt(word, 0, keep1);
-
-  var matches = matches0.concat(matches1);
-
-  console.log("word: " + word.literal + " " + word.characters[0].decomposition[0] + word.characters[1].decomposition[0]);
-  console.log(matches);
-  for (var i = 0; i < matches.length; i++) {
-    var s = i + ") " + matches[i] + " ";
-    s += (matches[i][0] === word.literal[0]) ? charData[matches[i][1]].decomposition[0] : charData[matches[i][0]].decomposition[0];
-    console.log(s);
-  }
-
-  if (matches.length) return matches[random(matches.length) << 0];
-}
-
-function findNextNEW() {
-
-  var keep0 = wordsMatchingCharAt(word.literal, 1, wordData, charData);
-  var matches0 = wordsMatchingDecompAt(word, 0, keep0);
-
-  var matches = matches0;
-  console.log(matches);
-  for (var i = 0; i < matches.length; i++) {
-    var s = i + ") " + matches[i] + " ";
-    s += (matches[i][0] === word.literal[0]) ? charData[matches[i][1]].decomposition[0] : charData[matches[i][0]].decomposition[0];
-    console.log(s);
-  }
-
-  var keep1 = wordsMatchingCharAt(word.literal, 0, wordData, charData);
-  var matches1 = wordsMatchingDecompAt(word, 1, keep0);
-
-  matches = matches1;
-  console.log(matches);
-  for (var i = 0; i < matches.length; i++) {
-    var s = i + ") " + matches[i] + " ";
-    s += (matches[i][0] === word.literal[0]) ? charData[matches[i][1]].decomposition[0] : charData[matches[i][0]].decomposition[0];
-    console.log(s);
-  }
-}
+// function wordsMatchingDecompAt(word, idx, partialMatches) {
+//   var matches = [];
+//   for (var i = 0; i < partialMatches.length; i++) {
+//     if (word.characters[idx].decomposition[0] === charData[partialMatches[i][idx]].decomposition[0]) {
+//       matches.push(partialMatches[i]);
+//     }
+//   }
+//   return matches;
+// }
 
 function findNext() {
 
@@ -120,172 +74,10 @@ function findNext() {
   if (matches.length) return matches[random(matches.length) << 0];
 }
 
-function findNextOK2() {
-
-  var matches = [];
-  var tmp = wordsMatchingCharAt(word.literal, 1, wordData, charData);
-  for (var i = 0; i < tmp.length; i++) {
-    //console.log(word.characters[0].decomposition[0] +" =? "+charData[tmp[i][0]].decomposition[0]);
-    if (word.characters[0].decomposition[0] === charData[tmp[i][0]].decomposition[0]) {
-      matches.push(tmp[i]);
-    }
-  }
-
-  tmp = wordsMatchingCharAt(word.literal, 0, wordData, charData);
-  for (var i = 0; i < tmp.length; i++) {
-    //console.log(word.characters[0].decomposition[0] +" =? "+charData[tmp[i][0]].decomposition[0]);
-    if (word.characters[1].decomposition[0] === charData[tmp[i][1]].decomposition[0]) {
-      matches.push(tmp[i]);
-    }
-  }
-
-  // console.log(matches);
-  // for (var i = 0; i < matches.length; i++) {
-  //   console.log(i+") "+charData[matches[i][0]].decomposition[0]);
-  // }
-
-  if (matches.length) return matches[random(matches.length) << 0];
-}
-
-function drawX() {
-
-}
-
 function remember(o) {
   memory.push(o);
   if (memory.length > memorySize)
     memory.shift();
-}
-
-function wordsMatchingCharAtXX(idx) {
-
-  // globals: word, wordData, charData
-
-  var cobj0 = word.characters[0];
-  var cobj1 = word.characters[1];
-  var char0 = cobj0.character;
-  var char1 = cobj1.character;
-  var dcmp0 = cobj0.decomposition[0];
-  var dcmp1 = cobj1.decomposition[0];
-
-  console.log(dcmp0, dcmp1);
-
-  //var keep0 = [], keep1 = [];
-
-  var tmp0 = wordsMatchingCharAt(word.literal, 1, wordData, charData);
-  for (var i = 0; i < tmp0.length; i++) {
-    charData[tmp0[i][1]].decomposition[0] === dcmp1
-  }
-
-  var keep1 = wordsMatchingCharAt(word.literal, 0, wordData, charData);
-
-  // check wordlist for entries exactly one matching letter
-  var list = Object.keys(wordData);
-  for (var i = 0; i < list.length; i++) {
-
-    // ignore exact matches
-    if (list[i] === word.literal) continue;
-
-    // save if first is same and 2nd matches decomp
-    if (list[i][0] === char0 && charData[list[i][1]].decomposition[0] === dcmp1) {
-
-      // NEXT: look at both dcmp[1]/dcmp[2]
-      // first-pass only add if either match
-      keep0.push(list[i]);
-    }
-
-    // or if second is same and 1st matches decomp
-    if (list[i][1] === char1 && charData[list[i][0]].decomposition[0] === dcmp0) {
-      // same here
-      keep1.push(list[i]);
-    }
-  }
-
-  return { keep0: keep0, keep1: keep1 };
-}
-
-function findNextX() {
-
-  // for a 2-char line AB CD, we want the char
-  // that can be swapped to create a new word
-  var cobj0 = word.characters[0];
-  var cobj1 = word.characters[1];
-  var char0 = cobj0.character;
-  var char1 = cobj1.character;
-  var dcmp0 = cobj0.decomposition[0];
-  var dcmp1 = cobj1.decomposition[0];
-
-  console.log(dcmp0, dcmp1);
-  var keep0 = [],
-    keep1 = [];
-
-  // check wordlist for entries exactly one matching letter
-  var list = Object.keys(wordData);
-  for (var i = 0; i < list.length; i++) {
-
-    // ignore exact matches
-    if (list[i] === word.literal) continue;
-
-    // save if first is same and 2nd matches decomp
-    if (list[i][0] === char0 && charData[list[i][1]].decomposition[0] === dcmp1) {
-
-      // NEXT: look at both dcmp[1]/dcmp[2]
-      // first-pass only add if either match
-      keep0.push(list[i]);
-    }
-
-    // or if second is same and 1st matches decomp
-    if (list[i][1] === char1 && charData[list[i][0]].decomposition[0] === dcmp0) {
-      // same here
-      keep1.push(list[i]);
-    }
-  }
-
-  var orient = (dcmp1 == '⿰' ? ["left", "right"] : ["top", "bottom"]);
-  console.log("Replace 2nd (" + char1 + ") by finding " + orient[0] + "=" + cobj1.decomposition[1] + " or " + orient[1] + "=" + cobj1.decomposition[2]);
-
-  var matches = [];
-
-  console.log("keep0", keep0);
-  // look through all options for 2nd character to see if we can match a part
-  for (var i = 0; i < keep0.length; i++) {
-    var test = charData[keep0[i][1]];
-    console.log("                    " + nf(i, 2) + ": " + keep0[i][1] + ") " +
-      orient[0] + "=" + test.decomposition[1] + "    " +
-      orient[1] + "=" + test.decomposition[2]);
-
-    if (test.decomposition[1] == cobj1.decomposition[1]) {
-      console.log("                    HIT(" + orient[0] + ") " + keep0[i] + " ***************");
-      matches.push(keep0[i]);
-    } else if (test.decomposition[2] == cobj1.decomposition[2]) {
-      console.log("                    HIT(" + orient[1] + ") " + keep0[i] + " ***************");
-      matches.push(keep0[i]);
-    }
-    //console.log("               with "+orient[1]+": "+test.decomposition[2]+" "+(test.decomposition[2]==cobj1.decomposition[2]));
-  }
-
-  var idx = Math.random() * (keep0.length + keep1.length) << 0;
-
-  //console.log("idx",idx);
-
-  // if (idx < keep0.length) {
-  //   next = getWord(keep0[idx]);
-  //   next.replaceChar = 1;
-  //   next.replacePart = 1; // TODO
-  // } else {
-  //   next = getWord(keep1[idx - keep0.length]);
-  //   next.replaceChar = 0;
-  //   next.replacePart = 0; // TODO
-  // }
-
-  return next;
-}
-
-function drawX() {
-
-  noLoop();
-  background(245);
-  renderWord(word);
 }
 
 function renderWord(word) {
@@ -293,26 +85,6 @@ function renderWord(word) {
     renderPath(word.characters[i], i);
   }
 }
-
-// var partIdx = 0;
-//
-// function drawX() {
-//
-//   background(245);
-//   if (millis() - ts > 1000 && !mouseIsPressed) {
-//     char = randomChar(charData);
-//     ts = millis();
-//   }
-//
-//   if (mouseX < width/2) partIdx = 0;
-//   if (mouseX >= width/2) partIdx = 1;
-//   if (mouseX >= width) partIdx = -1;
-//
-//   renderCharacters([randomProp(charData), randomProp(charData)]);
-//   //renderPath(char, { part: partIdx });
-//   //text(char.definition, width / 2, height - 10);
-//   noloop();
-// }
 
 function renderPath(char, charPos, options) {
 
